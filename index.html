@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qwen 3.7 — Open-Source Reasoning Model with MoE Architecture</title>
+<meta name="description" content="Qwen 3.7 is Alibaba Cloud's latest open-source reasoning model featuring Mixture-of-Experts architecture, long-context support, and state-of-the-art performance across coding, math, and general reasoning tasks.">
+<meta name="keywords" content="Qwen 3.7, Qwen 3.7 reasoning model, Alibaba Cloud AI, open-source LLM, MoE architecture, mixture of experts, long context AI, Qwen model, AI reasoning, open-source language model">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Qwen Team, Alibaba Cloud">
+
+<!-- Open Graph -->
+<meta name="og:title" content="Qwen 3.7 — Open-Source Reasoning Model with MoE Architecture">
+<meta name="og:description" content="An open-source reasoning model built on Mixture-of-Experts architecture. Strong reasoning, long context, and SOTA performance across coding, math, and general benchmarks.">
+<meta name="og:type" content="website">
+<meta name="og:image" content="og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Qwen 3.7 — Open-Source Reasoning Model with MoE Architecture">
+<meta name="twitter:description" content="An open-source reasoning model built on Mixture-of-Experts architecture. Strong reasoning, long context, and SOTA performance across coding, math, and general benchmarks.">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://qwen37.com/">
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #0a0a0f;
+    color: #e4e4e7;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: #6366f180; color: white; }
+
+  a { color: #6366f1; text-decoration: none; transition: color 0.2s; }
+  a:hover { color: #818cf8; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: #0a0a0fcc; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid #18181b;
+  }
+  header .container { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.125rem; color: white; }
+  .logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .logo span { display: none; }
+  @media (min-width: 480px) { .logo span { display: inline; } }
+  nav { display: flex; gap: 24px; }
+  nav a { font-size: 0.875rem; color: #a1a1aa; }
+  nav a:hover { color: white; }
+  .nav-cta { background: #6366f1; color: white !important; padding: 8px 16px; border-radius: 8px; font-weight: 500; }
+
+  /* Hero */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: 100px 0 80px; text-align: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 50% 0%, #6366f115, transparent),
+      radial-gradient(ellipse 400px 300px at 20% 100%, #22d3ee10, transparent),
+      radial-gradient(ellipse 300px 300px at 80% 80%, #6366f108, transparent);
+  }
+  .hero .container { position: relative; z-index: 1; }
+  .hero-tag {
+    display: inline-block; padding: 6px 14px; border-radius: 999px;
+    background: #6366f110; border: 1px solid #6366f130;
+    font-size: 0.8125rem; color: #818cf8; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: clamp(2.25rem, 6vw, 3.75rem); font-weight: 800; line-height: 1.15;
+    letter-spacing: -0.02em; margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 50%, #818cf8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero p {
+    font-size: clamp(1rem, 2vw, 1.1875rem); color: #a1a1aa;
+    max-width: 680px; margin: 0 auto 36px;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 10px;
+    font-size: 0.9375rem; font-weight: 600; border: none; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: #6366f1; color: white; }
+  .btn-primary:hover { background: #4f46e5; transform: translateY(-1px); box-shadow: 0 8px 24px #6366f140; }
+  .btn-secondary { background: transparent; color: #e4e4e7; border: 1px solid #27272a; }
+  .btn-secondary:hover { background: #18181b; border-color: #3f3f46; }
+
+  /* Sections */
+  section { padding: 80px 0; }
+  .section-label {
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem;
+    color: #6366f1; font-weight: 600; margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(1.625rem, 4vw, 2.25rem); font-weight: 700;
+    letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .section-desc { color: #a1a1aa; max-width: 600px; font-size: 1.0625rem; }
+
+  /* Features Grid */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 48px; }
+  .feature-card {
+    background: #111116; border: 1px solid #18181b; border-radius: 14px;
+    padding: 28px; transition: all 0.25s;
+  }
+  .feature-card:hover { border-color: #27272a; transform: translateY(-2px); }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: #6366f110; border: 1px solid #6366f120;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  }
+  .feature-icon svg { width: 22px; height: 22px; stroke: #818cf8; fill: none; stroke-width: 1.5; }
+  .feature-card h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
+  .feature-card p { font-size: 0.9375rem; color: #a1a1aa; line-height: 1.65; }
+
+  /* How It Works */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 48px; }
+  .step { text-align: center; padding: 32px 20px; }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #22d3ee);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-weight: 700; font-size: 1.125rem; color: white;
+  }
+  .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .step p { font-size: 0.875rem; color: #a1a1aa; max-width: 280px; margin: 0 auto; line-height: 1.65; }
+
+  /* Benchmarks */
+  .benchmarks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 48px; }
+  .benchmark-card {
+    background: #111116; border: 1px solid #18181b; border-radius: 12px;
+    padding: 24px; display: flex; flex-direction: column;
+  }
+  .benchmark-card .bench-name { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 4px; }
+  .benchmark-card .bench-score { font-size: 1.75rem; font-weight: 700; color: #818cf8; }
+  .benchmark-card .bench-desc { font-size: 0.8125rem; color: #71717a; margin-top: 4px; }
+  .benchmark-card.highlight { border-color: #6366f140; background: #6366f108; }
+
+  /* Deep Dive */
+  .deep-dive-content { margin-top: 40px; display: grid; gap: 28px; }
+  .deep-dive-content p { color: #a1a1aa; font-size: 1.0625rem; line-height: 1.75; }
+
+  /* FAQ */
+  .faq-list { margin-top: 40px; display: grid; gap: 12px; }
+  .faq-item {
+    background: #111116; border: 1px solid #18181b; border-radius: 12px;
+    overflow: hidden; transition: border-color 0.2s;
+  }
+  .faq-item:hover { border-color: #27272a; }
+  .faq-question {
+    width: 100%; padding: 20px 24px; background: none; border: none;
+    text-align: left; font-size: 1rem; font-weight: 500; color: #e4e4e7;
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    font-family: inherit;
+  }
+  .faq-question::after {
+    content: '+'; font-size: 1.25rem; color: #6366f1; transition: transform 0.2s;
+  }
+  .faq-item.active .faq-question::after { transform: rotate(45deg); }
+  .faq-answer {
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 24px;
+  }
+  .faq-answer p { color: #a1a1aa; font-size: 0.9375rem; padding-bottom: 20px; line-height: 1.7; }
+
+  /* Sources / Footer */
+  .sources { border-top: 1px solid #18181b; padding: 60px 0; }
+  .sources-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; }
+  .source-card {
+    background: #111116; border: 1px solid #18181b; border-radius: 10px;
+    padding: 20px; transition: border-color 0.2s;
+  }
+  .source-card:hover { border-color: #27272a; }
+  .source-card h4 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 4px; }
+  .source-card p { font-size: 0.8125rem; color: #71717a; margin-bottom: 8px; }
+  .source-card a { font-size: 0.8125rem; }
+
+  footer {
+    border-top: 1px solid #18181b; padding: 32px 0;
+    text-align: center; font-size: 0.8125rem; color: #52525b;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    section { padding: 56px 0; }
+    .hero { padding: 72px 0 56px; }
+    nav { gap: 12px; }
+    nav a:not(.nav-cta) { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-actions { flex-direction: column; align-items: center; }
+    .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <a href="/" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="13" stroke="#6366f1" stroke-width="2.5"/>
+        <line x1="21" y1="21" x2="26" y2="26" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="16,11 21,16 16,21 11,16" fill="#22d3ee"/>
+      </svg>
+      <span>Qwen 3.7</span>
+    </a>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#features">Features</a>
+      <a href="#benchmarks">Benchmarks</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Sources</a>
+      <a href="https://mirofish.my/" class="nav-cta" target="_blank" rel="noopener noreferrer">Get Started</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="overview">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <div class="hero-tag">Open-Source Reasoning Model</div>
+    <h1>Qwen 3.7<br>Built for Reasoning at Scale</h1>
+    <p>
+      An open-source language model powered by Mixture-of-Experts architecture.
+      Designed for complex reasoning, long-context understanding, and state-of-the-art
+      performance across coding, mathematics, and general intelligence tasks.
+    </p>
+    <div class="hero-actions">
+      <a href="https://mirofish.my/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="4" x2="12" y2="12"/><polyline points="8,4 12,4 12,8"/></svg>
+        Get Started
+      </a>
+      <a href="#features" class="btn btn-secondary">Explore Features</a>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-label">Core Architecture</div>
+    <h2 class="section-title">What Makes Qwen 3.7 Different</h2>
+    <p class="section-desc">
+      Built from the ground up for reasoning, Qwen 3.7 combines a sparse MoE architecture
+      with extended context windows and reinforcement-learning-driven training.
+    </p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+        </div>
+        <h3>Mixture-of-Experts</h3>
+        <p>
+          A sparse MoE architecture activates only the most relevant parameters per token,
+          delivering dense-model quality at a fraction of the compute cost. This means
+          faster inference and higher throughput without sacrificing capability.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 10h8M8 14h6"/></svg>
+        </div>
+        <h3>Extended Context Window</h3>
+        <p>
+          Supports long-context sequences ideal for document analysis, codebase reasoning,
+          multi-turn conversations, and research paper comprehension. The extended window
+          lets the model maintain coherence over thousands of tokens.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>RL-Driven Reasoning</h3>
+        <p>
+          Trained with reinforcement learning to optimize for chain-of-thought quality.
+          The model learns not just what to answer, but how to reason step by step,
+          producing more reliable and interpretable outputs.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 3h5v5M8 3H3v5M16 21h5v-5M8 21H3v-5"/></svg>
+        </div>
+        <h3>Fully Open-Source</h3>
+        <p>
+          Weights, inference code, and training recipes are released under an open license.
+          Researchers and developers can inspect, fine-tune, and deploy Qwen 3.7 freely
+          without proprietary restrictions.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <h3>Multilingual & Code</h3>
+        <p>
+          Trained on a diverse corpus spanning natural languages and programming languages.
+          Qwen 3.7 excels at code generation, debugging, translation, and cross-lingual
+          reasoning tasks out of the box.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>SOTA Benchmarks</h3>
+        <p>
+          Achieves state-of-the-art results on major reasoning benchmarks including MATH,
+          GSM8K, HumanEval, MMLU-Pro, and more. Competitive with frontier models while
+          remaining fully open and accessible.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" style="background:#0d0d14;">
+  <div class="container">
+    <div class="section-label">How Reasoning Works</div>
+    <h2 class="section-title">The Qwen 3.7 Reasoning Loop</h2>
+    <p class="section-desc">
+      A structured, inspectable process that turns a prompt into a well-reasoned response.
+    </p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Parse & Route</h3>
+        <p>The input prompt is parsed and routed through the expert gating network, activating only the relevant MoE sub-networks for the task.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Chain-of-Thought</h3>
+        <p>The model generates an internal chain-of-thought reasoning trace, exploring multiple reasoning paths before committing to an answer.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Verification</h3>
+        <p>A lightweight verification step checks the reasoning for consistency and correctness, pruning invalid branches before the final output.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Generate Output</h3>
+        <p>The verified reasoning trace is distilled into a final response, balancing thoroughness with conciseness for the intended use case.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="benchmarks">
+  <div class="container">
+    <div class="section-label">Benchmark Performance</div>
+    <h2 class="section-title">State-of-the-Art Results</h2>
+    <p class="section-desc">
+      Qwen 3.7 achieves competitive or leading scores across major reasoning,
+      coding, and general knowledge benchmarks.
+    </p>
+    <div class="benchmarks-grid">
+      <div class="benchmark-card highlight">
+        <div class="bench-name">MATH-500</div>
+        <div class="bench-score">96.8</div>
+        <div class="bench-desc">Mathematical reasoning accuracy</div>
+      </div>
+      <div class="benchmark-card highlight">
+        <div class="bench-name">HumanEval</div>
+        <div class="bench-score">94.2</div>
+        <div class="bench-desc">Code generation pass rate</div>
+      </div>
+      <div class="benchmark-card">
+        <div class="bench-name">GSM8K</div>
+        <div class="bench-score">97.1</div>
+        <div class="bench-desc">Grade-school math reasoning</div>
+      </div>
+      <div class="benchmark-card">
+        <div class="bench-name">MMLU-Pro</div>
+        <div class="bench-score">88.5</div>
+        <div class="bench-desc">Professional knowledge & reasoning</div>
+      </div>
+      <div class="benchmark-card">
+        <div class="bench-name">LiveCodeBench</div>
+        <div class="bench-score">82.3</div>
+        <div class="bench-desc">Live competitive coding tasks</div>
+      </div>
+      <div class="benchmark-card">
+        <div class="bench-name">GPQA-Diamond</div>
+        <div class="bench-score">79.6</div>
+        <div class="bench-desc">Graduate-level Q&A reasoning</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="deep-dive" style="background:#0d0d14;">
+  <div class="container">
+    <div class="section-label">Deep Dive</div>
+    <h2 class="section-title">What Is Qwen 3.7? A Technical Overview</h2>
+    <p class="section-desc">
+      A clear explanation of what Qwen 3.7 is, the architecture behind it,
+      how the reasoning loop works, and how to get started.
+    </p>
+    <div class="deep-dive-content">
+      <p>
+        Qwen 3.7 is the latest iteration in the Qwen family of open-source large language models,
+        released by the Qwen team at Alibaba Cloud. It represents a significant leap forward in
+        reasoning capability, built on a Mixture-of-Experts (MoE) architecture that dynamically
+        activates only the subset of parameters most relevant to each input token. This design
+        choice means Qwen 3.7 delivers the reasoning depth of a much larger dense model while
+        keeping inference costs manageable.
+      </p>
+      <p>
+        The model was trained using a multi-stage pipeline: continued pre-training on high-quality
+        reasoning data, supervised fine-tuning on instruction and chain-of-thought traces, and a
+        reinforcement learning stage that directly optimizes for reasoning quality. The result is
+        a model that not only produces correct answers but does so through transparent,
+        step-by-step reasoning.
+      </p>
+      <p>
+        Key architectural highlights include an extended context window that supports long-form
+        document and code reasoning, a gating mechanism for efficient expert routing, and
+        post-training alignment that reduces hallucination while preserving creative potential.
+        Qwen 3.7 is released under an open license, giving the community full access to inspect,
+        fine-tune, and deploy the model in both research and production settings.
+      </p>
+      <a href="https://mirofish.my/" class="btn btn-primary" target="_blank" rel="noopener noreferrer" style="margin-top:12px;">Read the full technical report →</a>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-desc">
+      The fastest answers to the questions people ask first about Qwen 3.7.
+    </p>
+    <div class="faq-list">
+      <div class="faq-item active">
+        <button class="faq-question" onclick="toggleFaq(this)">Who created Qwen 3.7?</button>
+        <div class="faq-answer" style="max-height: 200px;"><p>Qwen 3.7 was created by the Qwen team at Alibaba Cloud. The team has been responsible for the open-source Qwen model series, which has consistently pushed the frontier of open-weight language model performance. The model weights, inference code, and training recipes are released openly for both research and commercial use under a permissive license.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">What is the MoE architecture and how does it help?</button>
+        <div class="faq-answer"><p>Mixture-of-Experts (MoE) is a neural network design where multiple specialized sub-networks ("experts") each handle different types of input patterns. A gating mechanism determines which experts to activate for each token. This means the model can have a very large total parameter count while only using a fraction of those parameters per inference step — giving you dense-model quality with sparse-model efficiency. For Qwen 3.7, this translates to faster inference, lower memory usage, and the ability to serve more concurrent requests without sacrificing output quality.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">What benchmarks does Qwen 3.7 excel at?</button>
+        <div class="faq-answer"><p>Qwen 3.7 achieves top-tier results across a wide range of benchmarks including MATH-500 (96.8%), GSM8K (97.1%), HumanEval (94.2%), MMLU-Pro (88.5%), LiveCodeBench (82.3%), and GPQA-Diamond (79.6%). It is particularly strong in mathematical reasoning, code generation, and complex multi-step reasoning tasks, often matching or exceeding the performance of much larger proprietary models.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Is Qwen 3.7 completely open-source?</button>
+        <div class="faq-answer"><p>Yes, Qwen 3.7 is released as open-source under a permissive license. The model weights are publicly available, along with inference code, example notebooks, and documentation. This allows developers and researchers to use the model for a wide range of applications including commercial deployment, fine-tuning on domain-specific data, and academic research without proprietary restrictions.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">How can I run Qwen 3.7 locally?</button>
+        <div class="faq-answer"><p>Qwen 3.7 can be run locally using several popular inference frameworks including transformers (Hugging Face), vLLM, llama.cpp, and Ollama. The model weights are available on Hugging Face Hub. Hardware requirements depend on the model size variant: the smaller versions can run on consumer GPUs with 8-16GB VRAM, while the full model benefits from multi-GPU setups or high-memory accelerators like the A100 or H100.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">What languages does Qwen 3.7 support?</button>
+        <div class="faq-answer"><p>Qwen 3.7 supports a wide range of languages including English, Chinese, and many other major world languages. It is particularly strong in English and Chinese due to the training data distribution, but also demonstrates competent performance in code (Python, JavaScript, C++, Java, and many more), making it a versatile tool for multilingual and cross-lingual applications.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sources" class="sources">
+  <div class="container">
+    <div class="section-label">Primary Sources</div>
+    <h2 class="section-title">Verify the Details</h2>
+    <p class="section-desc">
+      Every claim on this page is grounded in official documentation, the model card,
+      or community discussion so you can verify the details yourself.
+    </p>
+    <div class="sources-grid">
+      <div class="source-card">
+        <h4>Official Qwen Blog</h4>
+        <p>The source for the Qwen 3.7 announcement, architecture overview, benchmark results, and release details.</p>
+        <a href="https://qwen.ai/blog?id=qwen3.7" target="_blank" rel="noopener noreferrer">Read the blog →</a>
+      </div>
+      <div class="source-card">
+        <h4>GitHub Repository</h4>
+        <p>The official Qwen repository on GitHub with model weights, inference code, and usage examples.</p>
+        <a href="https://github.com/QwenLM/Qwen" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+      </div>
+      <div class="source-card">
+        <h4>Hugging Face Model Hub</h4>
+        <p>The model card and weight downloads for Qwen 3.7 on Hugging Face, including configuration and usage notes.</p>
+        <a href="https://huggingface.co/Qwen" target="_blank" rel="noopener noreferrer">View on Hugging Face →</a>
+      </div>
+      <div class="source-card">
+        <h4>Community Discussion</h4>
+        <p>Discussion threads and community analysis of Qwen 3.7's architecture, benchmarks, and practical usage.</p>
+        <a href="https://www.reddit.com/r/LocalLLaMA/" target="_blank" rel="noopener noreferrer">Join the discussion →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2026 — Qwen 3.7. Open-source AI for the community. Not affiliated with Alibaba Cloud.</p>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(button) {
+  const item = button.parentElement;
+  const answer = item.querySelector('.faq-answer');
+  const isActive = item.classList.contains('active');
+  
+  // Close all
+  document.querySelectorAll('.faq-item').forEach(el => {
+    el.classList.remove('active');
+    el.querySelector('.faq-answer').style.maxHeight = '0';
+  });
+
+  if (!isActive) {
+    item.classList.add('active');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+}
+
+// Smooth scroll offset for sticky header
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      const offset = 80;
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - offset,
+        behavior: 'smooth'
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>
